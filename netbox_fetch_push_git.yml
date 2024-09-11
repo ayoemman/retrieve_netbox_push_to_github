@@ -56,7 +56,7 @@
       command:
         cmd: git remote add origin {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
-      when: "'origin' not in (chdir={{ git_repo_path }} git remote -v)"
+      when: git_remote_status.failed
 
     - name: Configure Git user
       command:
