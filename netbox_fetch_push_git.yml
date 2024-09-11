@@ -26,7 +26,15 @@
         repo: "https://github.com/ayoemman/netbox_fetch_push.git"
         dest: "{{ git_repo_path }}"
         version: master
-        state: present
+        update: yes
+        clone: yes
+        # Use the following if authentication is required
+        # key_file: /path/to/your/private/key
+        # accept_hostkey: yes
+        # ssh_opts: '-o StrictHostKeyChecking=no'
+      # Ensure that the git repository is updated if already cloned
+      when: not (ansible_facts['pkg_mgr'] == 'git' and
+                  ansible_facts['git_version'] is defined)
 
     - name: Fetch sites from NetBox
       uri:
