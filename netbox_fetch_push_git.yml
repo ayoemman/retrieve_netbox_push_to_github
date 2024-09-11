@@ -53,12 +53,10 @@
       command: chdir={{ git_repo_path }} git status
 
     - name: Add remote repository if not present
-      git:
-        repo: "{{ git_repo_url }}"
-        dest: "{{ git_repo_path }}"
-        version: master
-        state: present
-      when: "'origin' not in (chdir={{ git_repo_path }} git remote) else skip"
+      command:
+        cmd: git remote add origin {{ git_repo_url }}
+        chdir: "{{ git_repo_path }}"
+      when: "'origin' not in (chdir={{ git_repo_path }} git remote -v)"
 
     - name: Configure Git user
       command:
