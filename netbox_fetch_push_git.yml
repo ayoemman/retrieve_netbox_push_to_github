@@ -25,7 +25,7 @@
       git:
         repo: "https://github.com/ayoemman/netbox_fetch_push.git"
         dest: "{{ git_repo_path }}"
-        version: master
+        version: main
         update: yes
         clone: yes
         # Use the following if authentication is required
