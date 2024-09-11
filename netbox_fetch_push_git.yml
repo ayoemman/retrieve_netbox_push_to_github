@@ -27,12 +27,14 @@
         dest: "{{ git_repo_path }}"
         version: main
         update: yes
-        clone: yes
-        # Use the following if authentication is required
-        # key_file: /path/to/your/private/key
-        # accept_hostkey: yes
-        # ssh_opts: '-o StrictHostKeyChecking=no'
-      # Ensure that the git repository is updated if already cloned
+    
+    - name: Check if 'origin' remote is already configured
+      command: git remote get-url origin
+      args:
+        chdir: "{{ git_repo_path }}"
+      register: git_remote_status
+      failed_when: false
+      changed_when: false
 
     - name: Fetch sites from NetBox
       uri:
@@ -48,7 +50,7 @@
         content: "{{ netbox_sites.content | to_nice_yaml }}"
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
-
+    
     - name: Change to the git repository directory
       command: chdir={{ git_repo_path }} git status
 
