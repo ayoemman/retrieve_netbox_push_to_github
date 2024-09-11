@@ -33,8 +33,6 @@
         # accept_hostkey: yes
         # ssh_opts: '-o StrictHostKeyChecking=no'
       # Ensure that the git repository is updated if already cloned
-      when: not (ansible_facts['pkg_mgr'] == 'git' and
-                  ansible_facts['git_version'] is defined)
 
     - name: Fetch sites from NetBox
       uri:
