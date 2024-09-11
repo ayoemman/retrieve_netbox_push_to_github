@@ -43,19 +43,28 @@
       when: "'origin' not in (chdir={{ git_repo_path }} git remote) else skip"
 
     - name: Configure Git user
-      git_config:
-        name: "ayoemman"
-        email: "ayoemman006@gmail.com"
-        scope: global
+      command:
+        cmd: git config --global user.name "ayoemman"
+        chdir: "{{ git_repo_path }}"
+      
+    - name: Configure Git email
+      command:
+        cmd: git config --global user.email "ayoemman006@gmail.com"
+        chdir: "{{ git_repo_path }}"
 
     - name: Add new files to git
-      command: chdir={{ git_repo_path }} git add .
-      ignore_errors: yes
+      command:
+        cmd: git add .
+        chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
-      command: chdir={{ git_repo_path }} git commit -m "Add NetBox data"
+      command:
+        cmd: git commit -m "Add NetBox data"
+        chdir: "{{ git_repo_path }}"
       ignore_errors: yes
 
     - name: Push changes to GitHub
-      command: chdir={{ git_repo_path }} git push
+      command:
+        cmd: git push
+        chdir: "{{ git_repo_path }}"
       ignore_errors: yes
