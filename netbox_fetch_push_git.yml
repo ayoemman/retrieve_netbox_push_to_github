@@ -16,6 +16,11 @@
         path: "{{ output_dir }}"
         state: directory
 
+    - name: Ensure the git repository directory exists
+      file:
+        path: "{{ git_repo_path }}"
+        state: directory
+
     - name: Fetch sites from NetBox
       uri:
         url: "{{ netbox_api_url }}dcim/sites/"
