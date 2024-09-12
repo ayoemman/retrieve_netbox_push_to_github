@@ -7,7 +7,7 @@
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
     github_token: "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"
-    git_repo_url: "https://ayoemman:{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
+    git_repo_url: "https://github.com/ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
@@ -55,7 +55,7 @@
 
     - name: Add remote repository if not present
       command:
-        cmd: git remote add origin {{ git_repo_url }}
+        cmd: git remote add origin https://ayoemman@github.com/ayoemman/netboxinventory_1.git
         chdir: "{{ git_repo_path }}"
       when: git_remote_status.failed
 
