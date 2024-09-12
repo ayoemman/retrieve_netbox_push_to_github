@@ -7,9 +7,9 @@
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
-    github_token: "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"
+    github_token: "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"
+    git_repo_url: "https://github.com/ayoemman/netboxinventory_1.git"
     #git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
-    git_repo_url: "https://ayoemman:{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
@@ -24,18 +24,10 @@
 
     - name: Clone the repository if not present
       git:
-        repo: "https://github.com/ayoemman/netbox_fetch_push.git"
+        repo: "{{ git_repo_url }}"
         dest: "{{ git_repo_path }}"
         version: main
         update: yes
-    
-    - name: Check if 'origin' remote is already configured
-      command: git remote get-url origin
-      args:
-        chdir: "{{ git_repo_path }}"
-      register: git_remote_status
-      failed_when: false
-      changed_when: false
 
     - name: Fetch sites from NetBox
       uri:
@@ -51,15 +43,21 @@
         content: "{{ netbox_sites.content | to_nice_yaml }}"
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
-    
-    - name: Change to the git repository directory
-      command: chdir={{ git_repo_path }} git status
 
-    - name: Add remote repository if not present
+    - name: Change to the git repository directory
       command:
-        cmd: git remote add origin https://github.com/ayoemman/netboxinventory_1.git
+        cmd: git status
         chdir: "{{ git_repo_path }}"
-      when: git_remote_status.failed
+
+    - name: Set remote URL to use personal access token
+      command:
+        cmd: git remote set-url origin https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
+        chdir: "{{ git_repo_path }}"
+      register: git_remote_set_url_result
+
+    - name: Debug remote URL change result
+      debug:
+        var: git_remote_set_url_result
 
     - name: Configure Git user
       command:
@@ -76,11 +74,20 @@
         cmd: git add .
         chdir: "{{ git_repo_path }}"
 
+    - name: Check for changes to commit
+      command:
+        cmd: git status --porcelain
+        chdir: "{{ git_repo_path }}"
+      register: git_status_result
+
+    - name: Debug Git Status
+      debug:
+        var: git_status_result.stdout_lines
+
     - name: Commit changes to git
       command:
         cmd: git commit -m "Add NetBox data" --allow-empty
         chdir: "{{ git_repo_path }}"
-      ignore_errors: yes
       register: git_commit_result
 
     - name: Debug commit result
@@ -88,14 +95,9 @@
         var: git_commit_result
 
     - name: Push changes to GitHub
-      environment:
-        GIT_ASKPASS: /bin/echo
-        GITHUB_TOKEN: "{{ github_token }}"
       command:
-        cmd: git push {{ git_repo_url }}
+        cmd: git push
         chdir: "{{ git_repo_path }}"
-      ignore_errors: yes
-      when: git_commit_result.rc == 0
       register: git_push_result
 
     - name: Debug push result
