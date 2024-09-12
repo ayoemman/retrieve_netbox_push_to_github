@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: no
   vars:
-    netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/"
+    netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/dcim/sites/"
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
