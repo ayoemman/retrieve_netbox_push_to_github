@@ -1,3 +1,4 @@
+---
 - name: Fetch data from NetBox and push to GitHub
   hosts: localhost
   gather_facts: no
@@ -81,15 +82,7 @@
       ignore_errors: yes
 
     - name: Push changes to GitHub
-      environment:
-        GIT_ASKPASS: /bin/echo
-        GITHUB_TOKEN: "{{ github_token }}"
       command:
         cmd: git push
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
-      register: git_push_result
-
-    - name: Debug push result
-      debug:
-        var: git_push_result
