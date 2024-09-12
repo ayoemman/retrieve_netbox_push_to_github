@@ -1,6 +1,6 @@
 ---
 - name: Fetch data from NetBox and push to GitHub
-  hosts: localhost
+  hosts: all
   gather_facts: no
   vars:
     netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/"
