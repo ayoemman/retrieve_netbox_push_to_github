@@ -40,7 +40,7 @@
     - name: Write sites data to file
       copy:
         content: "{{ netbox_sites.content | to_nice_yaml }}"
-        dest: "{{ output_dir }}/sites.yml"
+        dest: "{{ output_dir }}/sites2.yml"
       when: netbox_sites.status == 200
 
     - name: Change to the git repository directory
@@ -60,8 +60,8 @@
 
     - name: Copy sites.yml to the repository directory
       copy:
-        src: "{{ output_dir }}/sites.yml"
-        dest: "{{ git_repo_path }}/sites.yml"
+        src: "{{ output_dir }}/sites2.yml"
+        dest: "{{ git_repo_path }}/sites2.yml"
         
     - name: Add new files to git
       command:
