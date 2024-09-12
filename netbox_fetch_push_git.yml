@@ -8,7 +8,7 @@
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
     github_token: "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"
-    git_repo_url: "https://github.com/ayoemman/netboxinventory_1.git"
+    git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
@@ -80,15 +80,21 @@
         cmd: git commit -m "Add NetBox data"
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
+      register: git_commit_result
+
+    - name: Debug commit result
+      debug:
+        var: git_commit_result
 
     - name: Push changes to GitHub
       environment:
         GIT_ASKPASS: /bin/echo
         GITHUB_TOKEN: "{{ github_token }}"
       command:
-        cmd: git push https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
+        cmd: git push {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
+      when: git_commit_result.rc == 0
       register: git_push_result
 
     - name: Debug push result
