@@ -26,6 +26,7 @@
         dest: "{{ git_repo_path }}"
         version: main
         update: yes
+        accept_hostkey: true
 
     - name: Fetch sites from NetBox
       uri:
