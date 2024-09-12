@@ -57,9 +57,14 @@
         cmd: git config --global user.email "ayoemman006@gmail.com"
         chdir: "{{ git_repo_path }}"
 
+    - name: Copy sites.yml to the repository directory
+      copy:
+        src: "{{ output_dir }}/sites.yml"
+        dest: "{{ git_repo_path }}/sites.yml"
+        
     - name: Add new files to git
       command:
-        cmd: git add {{ output_dir }}/sites.yml
+        cmd: git add sites.yml
         chdir: "{{ git_repo_path }}"
 
     - name: Check for changes to commit
