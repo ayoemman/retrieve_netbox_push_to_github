@@ -7,8 +7,9 @@
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
-    github_token: "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"
-    git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
+    github_token: "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"
+    #git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
+    git_repo_url: "https://ayoemman:{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
