@@ -59,7 +59,7 @@
 
     - name: Add new files to git
       command:
-        cmd: git add .
+        cmd: git add {{ output_dir }}/sites.yml
         chdir: "{{ git_repo_path }}"
 
     - name: Check for changes to commit
