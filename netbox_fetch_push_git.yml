@@ -7,9 +7,7 @@
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
-    github_token: "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"
-    git_repo_url: "https://github.com/ayoemman/netboxinventory_1.git"
-    #git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
+    git_repo_url: "git@github.com:ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
@@ -49,16 +47,6 @@
         cmd: git status
         chdir: "{{ git_repo_path }}"
 
-    - name: Set remote URL to use personal access token
-      command:
-        cmd: git remote set-url origin https://ayoemman:{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
-        chdir: "{{ git_repo_path }}"
-      register: git_remote_set_url_result
-
-    - name: Debug remote URL change result
-      debug:
-        var: git_remote_set_url_result
-
     - name: Configure Git user
       command:
         cmd: git config --global user.name "ayoemman"
@@ -96,7 +84,7 @@
 
     - name: Push changes to GitHub
       command:
-        cmd: git push origin main
+        cmd: git push
         chdir: "{{ git_repo_path }}"
       register: git_push_result
 
