@@ -51,7 +51,7 @@
 
     - name: Set remote URL to use personal access token
       command:
-        cmd: git remote set-url origin https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
+        cmd: git remote set-url origin https://ayoemman:{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
         chdir: "{{ git_repo_path }}"
       register: git_remote_set_url_result
 
