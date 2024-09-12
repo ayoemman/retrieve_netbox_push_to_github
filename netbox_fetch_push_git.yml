@@ -96,7 +96,7 @@
 
     - name: Push changes to GitHub
       command:
-        cmd: git push
+        cmd: git push origin main
         chdir: "{{ git_repo_path }}"
       register: git_push_result
 
