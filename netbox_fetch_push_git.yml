@@ -92,7 +92,6 @@
         GITHUB_TOKEN: "{{ github_token }}"
       command:
         cmd: git push {{ git_repo_url }}
-        #cmd: git push -u origin main
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
       when: git_commit_result.rc == 0
