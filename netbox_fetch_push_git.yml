@@ -1,3 +1,4 @@
+---
 - name: Fetch data from NetBox and push to GitHub
   hosts: localhost
   gather_facts: no
@@ -55,7 +56,7 @@
 
     - name: Add remote repository if not present
       command:
-        cmd: git remote add origin https://ayoemman@github.com/ayoemman/netboxinventory_1.git
+        cmd: git remote add origin https://github.com/ayoemman/netboxinventory_1.git
         chdir: "{{ git_repo_path }}"
       when: git_remote_status.failed
 
@@ -85,7 +86,7 @@
         GIT_ASKPASS: /bin/echo
         GITHUB_TOKEN: "{{ github_token }}"
       command:
-        cmd: git push
+        cmd: git push https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
       register: git_push_result
