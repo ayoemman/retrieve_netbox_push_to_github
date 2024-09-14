@@ -8,7 +8,8 @@
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
     github_token: "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"
-    git_repo_url: "https://{{ github_token }}@github.com/ayoemman/netboxinventory_1.git"
+    git_repo_url: "https://github.com/ayoemman/netboxinventory_1.git"
+    askpass_script_path: "/home/user1/git_askpass.sh"
 
   tasks:
     - name: Ensure output directory exists
@@ -35,6 +36,14 @@
       register: git_remote_status
       failed_when: false
       changed_when: false
+
+    - name: Create GIT_ASKPASS script
+      ansible.builtin.copy:
+        dest: "{{ askpass_script_path }}"
+        mode: '0700'
+        content: |
+          #!/bin/sh
+          echo "{{ github_token }}"
 
     - name: Fetch sites from NetBox
       ansible.builtin.uri:
@@ -87,4 +96,6 @@
       ansible.builtin.command:
         cmd: git push -u origin main
         chdir: "{{ git_repo_path }}"
+      environment:
+        GIT_ASKPASS: "{{ askpass_script_path }}"
       ignore_errors: yes
