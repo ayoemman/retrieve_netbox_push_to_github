@@ -12,32 +12,32 @@
 
   tasks:
     - name: Ensure output directory exists
-      ansible.builtin.file:
+      file:
         path: "{{ output_dir }}"
         state: directory
 
     - name: Ensure the git repository directory exists
-      ansible.builtin.file:
+      file:
         path: "{{ git_repo_path }}"
         state: directory
 
     - name: Clone the repository if not present
-      ansible.builtin.git:
-        repo: "{{ git_repo_url }}"
+      git:
+        repo: "https://github.com/ayoemman/netbox_fetch_push.git"
         dest: "{{ git_repo_path }}"
         version: main
         update: yes
     
     - name: Check if 'origin' remote is already configured
-      ansible.builtin.command:
-        cmd: git remote get-url origin
+      command: git remote get-url origin
+      args:
         chdir: "{{ git_repo_path }}"
       register: git_remote_status
       failed_when: false
       changed_when: false
 
     - name: Fetch sites from NetBox
-      ansible.builtin.uri:
+      uri:
         url: "{{ netbox_api_url }}dcim/sites/"
         method: GET
         headers:
@@ -46,45 +46,57 @@
       register: netbox_sites
 
     - name: Write sites data to file
-      ansible.builtin.copy:
+      copy:
         content: "{{ netbox_sites.content | to_nice_yaml }}"
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
     
     - name: Change to the git repository directory
-      ansible.builtin.command:
-        cmd: git status
-        chdir: "{{ git_repo_path }}"
+      command: chdir={{ git_repo_path }} git status
 
     - name: Add remote repository if not present
-      ansible.builtin.command:
-        cmd: git remote add origin {{ git_repo_url }}
+      command:
+        cmd: git remote add origin https://github.com/ayoemman/netboxinventory_1.git
         chdir: "{{ git_repo_path }}"
       when: git_remote_status.failed
 
     - name: Configure Git user
-      ansible.builtin.command:
+      command:
         cmd: git config --global user.name "ayoemman"
         chdir: "{{ git_repo_path }}"
       
     - name: Configure Git email
-      ansible.builtin.command:
+      command:
         cmd: git config --global user.email "ayoemman006@gmail.com"
         chdir: "{{ git_repo_path }}"
 
     - name: Add new files to git
-      ansible.builtin.command:
+      command:
         cmd: git add .
         chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
-      ansible.builtin.command:
-        cmd: git commit -m "Add NetBox data"
+      command:
+        cmd: git commit -m "Add NetBox data" --allow-empty
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
+      register: git_commit_result
+
+    - name: Debug commit result
+      debug:
+        var: git_commit_result
 
     - name: Push changes to GitHub
-      ansible.builtin.command:
-        cmd: git push -u origin main
+      environment:
+        GIT_ASKPASS: /bin/echo
+        GITHUB_TOKEN: "{{ github_token }}"
+      command:
+        cmd: git push {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
+      when: git_commit_result.rc == 0
+      register: git_push_result
+
+    - name: Debug push result
+      debug:
+        var: git_push_result
