@@ -55,7 +55,7 @@
 
     - name: Commit changes to git
       command:
-        cmd: git commit -m "Add NetBox data"
+        cmd: git commit -m "Add NetBox data" --allow-empty
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
 
