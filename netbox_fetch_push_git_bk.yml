@@ -43,18 +43,14 @@
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
 
-    - name: Verify file creation
-      stat:
-        path: "{{ output_dir }}/sites.yml"
-      register: sites_file_stat
-
-    - name: Print file status
-      debug:
-        msg: "File {{ output_dir }}/sites.yml exists: {{ sites_file_stat.stat.exists }}"
+    - name: Copy sites.yml to the repository directory
+      copy:
+        src: "{{ output_dir }}/sites.yml"
+        dest: "{{ git_repo_path }}/sites.yml"
 
     - name: Add specific file to git
       command:
-        cmd: git add {{ output_dir }}/sites.yml
+        cmd: git add sites.yml
         chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
@@ -62,16 +58,6 @@
         cmd: git commit -m "Add NetBox data"
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
-
-    - name: Check if sites.yml is staged
-      command: git status --porcelain
-      args:
-        chdir: "{{ git_repo_path }}"
-      register: git_status_output
-
-    - name: Print Git status
-      debug:
-        msg: "{{ git_status_output.stdout }}"
 
     - name: Push changes to GitHub
       command:
