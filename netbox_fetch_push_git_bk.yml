@@ -7,6 +7,7 @@
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
+    github_token: "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"
     git_repo_url: "git@github.com:ayoemman/netboxinventory_1.git"
 
   tasks:
@@ -42,52 +43,38 @@
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
 
-    - name: Change to the git repository directory
-      command:
-        cmd: git status
-        chdir: "{{ git_repo_path }}"
+    - name: Verify file creation
+      stat:
+        path: "{{ output_dir }}/sites.yml"
+      register: sites_file_stat
 
-    - name: Configure Git user
-      command:
-        cmd: git config --global user.name "ayoemman"
-        chdir: "{{ git_repo_path }}"
-      
-    - name: Configure Git email
-      command:
-        cmd: git config --global user.email "ayoemman006@gmail.com"
-        chdir: "{{ git_repo_path }}"
-
-    - name: Add new files to git
-      command:
-        cmd: git add .
-        chdir: "{{ git_repo_path }}"
-
-    - name: Check for changes to commit
-      command:
-        cmd: git status --porcelain
-        chdir: "{{ git_repo_path }}"
-      register: git_status_result
-
-    - name: Debug Git Status
+    - name: Print file status
       debug:
-        var: git_status_result.stdout_lines
+        msg: "File {{ output_dir }}/sites.yml exists: {{ sites_file_stat.stat.exists }}"
+
+    - name: Add specific file to git
+      command:
+        cmd: git add {{ output_dir }}/sites.yml
+        chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
       command:
-        cmd: git commit -m "Add NetBox data" --allow-empty
+        cmd: git commit -m "Add NetBox data"
         chdir: "{{ git_repo_path }}"
-      register: git_commit_result
+      ignore_errors: yes
 
-    - name: Debug commit result
+    - name: Check if sites.yml is staged
+      command: git status --porcelain
+      args:
+        chdir: "{{ git_repo_path }}"
+      register: git_status_output
+
+    - name: Print Git status
       debug:
-        var: git_commit_result
+        msg: "{{ git_status_output.stdout }}"
 
     - name: Push changes to GitHub
       command:
         cmd: git push
         chdir: "{{ git_repo_path }}"
-      register: git_push_result
-
-    - name: Debug push result
-      debug:
-        var: git_push_result
+      ignore_errors: yes
