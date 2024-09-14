@@ -27,14 +27,6 @@
         dest: "{{ git_repo_path }}"
         version: main
         update: yes
-    
-    - name: Check if 'origin' remote is already configured
-      command: git remote get-url origin
-      args:
-        chdir: "{{ git_repo_path }}"
-      register: git_remote_status
-      failed_when: false
-      changed_when: false
 
     - name: Fetch sites from NetBox
       uri:
@@ -50,15 +42,17 @@
         content: "{{ netbox_sites.content | to_nice_yaml }}"
         dest: "{{ output_dir }}/sites.yml"
       when: netbox_sites.status == 200
-    
+
     - name: Change to the git repository directory
       command: chdir={{ git_repo_path }} git status
 
     - name: Add remote repository if not present
       command:
-        cmd: git remote add origin https://github.com/ayoemman/netboxinventory_1.git
+        cmd: git remote add origin {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
-      when: git_remote_status.failed
+      register: git_remote_status
+      failed_when: false
+      changed_when: false
 
     - name: Configure Git user
       command:
@@ -81,9 +75,13 @@
         chdir: "{{ git_repo_path }}"
       register: git_status_result
 
+    - name: Debug Git Status
+      debug:
+        var: git_status_result.stdout_lines
+
     - name: Commit changes to git
       command:
-        cmd: git commit -m "Add NetBox data" --allow-empty
+        cmd: git commit -m "Add NetBox data"
         chdir: "{{ git_repo_path }}"
       when: git_status_result.stdout != ""
       register: git_commit_result
@@ -100,10 +98,10 @@
       command:
         cmd: git push {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
-      when: git_status_result.stdout != ""
+      when: git_commit_result is defined and git_commit_result.rc == 0
       register: git_push_result
 
     - name: Debug push result
       debug:
         var: git_push_result
-      when: git_status_result.stdout != ""
+      when: git_commit_result is defined and git_commit_result.rc == 0
