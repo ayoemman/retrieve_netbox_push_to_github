@@ -84,6 +84,6 @@
     - name: Push changes to GitHub
       command:
         #cmd: git push
-        cmd: git push -u origin master
+        cmd: git push -u origin main
         chdir: "{{ git_repo_path }}"
       ignore_errors: yes
