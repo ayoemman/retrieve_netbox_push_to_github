@@ -75,16 +75,23 @@
         cmd: git add .
         chdir: "{{ git_repo_path }}"
 
+    - name: Check for changes to commit
+      command:
+        cmd: git status --porcelain
+        chdir: "{{ git_repo_path }}"
+      register: git_status_result
+
     - name: Commit changes to git
       command:
         cmd: git commit -m "Add NetBox data" --allow-empty
         chdir: "{{ git_repo_path }}"
-      ignore_errors: yes
+      when: git_status_result.stdout != ""
       register: git_commit_result
 
     - name: Debug commit result
       debug:
         var: git_commit_result
+      when: git_status_result.stdout != ""
 
     - name: Push changes to GitHub
       environment:
@@ -93,10 +100,10 @@
       command:
         cmd: git push {{ git_repo_url }}
         chdir: "{{ git_repo_path }}"
-      ignore_errors: yes
-      when: git_commit_result.rc == 0
+      when: git_status_result.stdout != ""
       register: git_push_result
 
     - name: Debug push result
       debug:
         var: git_push_result
+      when: git_status_result.stdout != ""
