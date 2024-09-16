@@ -36,13 +36,13 @@
     - name: Write sites data to file
       copy:
         content: "{{ netbox_sites.content | to_nice_yaml }}"
-        dest: "{{ output_dir }}/sites23.yml"
+        dest: "{{ output_dir }}/sites20.yml"
       when: netbox_sites.status == 200
 
     - name: Copy sites.yml to the repository directory
       copy:
-        src: "{{ output_dir }}/sites23.yml"
-        dest: "{{ git_repo_path }}/sites23.yml"
+        src: "{{ output_dir }}/sites20.yml"
+        dest: "{{ git_repo_path }}/sites20.yml"
     
     - name: Configure Git user
       command:
@@ -56,7 +56,7 @@
 
     - name: Add specific file to git
       command:
-        cmd: git add sites23.yml
+        cmd: git add sites20.yml
         chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
