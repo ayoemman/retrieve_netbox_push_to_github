@@ -37,7 +37,7 @@
 
     - name: Fetch devices from NetBox
       uri:
-        url: "{{ netbox_url }}/api/dcim/devices/"
+        url: "{{ netbox_api_url }}/api/dcim/devices/"
         method: GET
         headers:
           Authorization: "Token {{ netbox_token }}"
@@ -48,7 +48,7 @@
 
     - name: Fetch racks from NetBox
       uri:
-        url: "{{ netbox_url }}/api/dcim/racks/"
+        url: "{{ netbox_api_url }}/api/dcim/racks/"
         method: GET
         headers:
           Authorization: "Token {{ netbox_token }}"
