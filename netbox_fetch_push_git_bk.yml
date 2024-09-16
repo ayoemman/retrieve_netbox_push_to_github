@@ -50,7 +50,7 @@
 
     - name: Add specific file to git
       command:
-        cmd: git add sites.yml
+        cmd: git add sites22.yml
         chdir: "{{ git_repo_path }}"
 
     - name: Commit changes to git
