@@ -59,7 +59,7 @@
             "sites": {{ netbox_devices.content | to_nice_json }},
             "racks": {{ netbox_racks.content | to_nice_json }}
           }
-        dest: "{{ output_dir }}"
+        dest: "{{ output_dir }}/configurations.json"
         mode: '0644'
       register: json_save_result
       failed_when: json_save_result is not defined
