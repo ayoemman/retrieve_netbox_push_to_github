@@ -3,12 +3,8 @@
   hosts: localhost
   gather_facts: no
   vars:
-    netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/"
-    netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
-    github_token: "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"
-    git_repo_url: "git@github.com:ayoemman/netboxinventory_1.git"
 
   tasks:
     - name: Ensure output directory exists
