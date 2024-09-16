@@ -40,7 +40,7 @@
     - name: Write sites data to file
       copy:
         content: "{{ netbox_sites.content | to_nice_yaml }}"
-        dest: "{{ output_dir }}/sites22.yml"
+        dest: "{{ output_dir }}/sites2.yml"
       when: netbox_sites.status == 200
 
     - name: Copy sites.yml to the repository directory
