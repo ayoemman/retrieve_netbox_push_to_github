@@ -46,12 +46,12 @@
     
     - name: Configure Git user
       command:
-        cmd: git config --global user.name "ayoemman"
+        cmd: git config --global user.name {{ git_username }}
         chdir: "{{ git_repo_path }}"
       
     - name: Configure Git email
       command:
-        cmd: git config --global user.email "ayoemman006@gmail.com"
+        cmd: git config --global user.email {{ git_useremail }}
         chdir: "{{ git_repo_path }}"
 
     - name: Add specific file to git
