@@ -9,7 +9,6 @@
     git_repo_path: "/home/user1/netbox_fetch_push/"
     xlsx_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.xlsx"
     script_path: "convert_json_to_xlsx.py"
-    htmltopdf_script_path: "convert_html_to_pdf.py"
 
   tasks:
     - name: Ensure output directory exists
