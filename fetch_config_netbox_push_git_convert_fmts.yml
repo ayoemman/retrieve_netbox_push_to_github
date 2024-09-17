@@ -7,8 +7,6 @@
     current_time: "{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"  # Format as HHMM
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
-    html_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.html"
-    pdf_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.pdf"
     xlsx_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.xlsx"
     script_path: "convert_json_to_xlsx.py"
     htmltopdf_script_path: "convert_html_to_pdf.py"
@@ -77,31 +75,6 @@
         dest: "{{ git_repo_path }}"
       register: copy_json_result
 
-    - name: Convert NetBox data to HTML
-      copy:
-        content: |
-          <html>
-          <head>
-            <title>NetBox Data</title>
-          </head>
-          <body>
-            <h1>NetBox Data</h1>
-            <h2>Devices</h2>
-            <pre>{{ netbox_devices.content | to_nice_json }}</pre>
-            <h2>Sites</h2>
-            <pre>{{ netbox_sites.content | to_nice_json }}</pre>
-            <h2>Racks</h2>
-            <pre>{{ netbox_racks.content | to_nice_json }}</pre>
-          </body>
-          </html>
-        dest: "{{ html_file }}"
-        mode: '0644'
-
-    - name: Convert HTML to PDF using Python script
-      ansible.builtin.shell: |
-        export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PAT
-      command: "python3 {{ htmltopdf_script_path }} {{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.html {{ pdf_file }}"
-
     - name: Convert JSON to XLSX
       command: "python3 {{ script_path }} {{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.json {{ xlsx_file }}"
 
@@ -121,8 +94,6 @@
         dest: "{{ git_repo_path }}"
       loop:
         - "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.json"
-        - "{{ html_file }}"
-        - "{{ pdf_file }}"
         - "{{ xlsx_file }}"
       register: copy_files_result
 
