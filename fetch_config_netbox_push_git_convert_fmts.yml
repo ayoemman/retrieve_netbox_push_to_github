@@ -3,7 +3,12 @@
   hosts: localhost
   gather_facts: no
   vars:
-    target_host: "node3"
+    netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/"
+    netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
+    github_token: "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"
+    git_repo_url: "git@github.com:ayoemman/test01.git"
+    git_username: "ayoemman"
+    git_useremail: "ayoemman006@gmail.com"
     output_dir: "/home/user1/netbox_data"
     git_repo_path: "/home/user1/netbox_fetch_push/"
     html_file: "{{ output_dir }}/netbox_data.html"
