@@ -88,9 +88,13 @@
         dest: "{{ html_file }}"
         mode: '0644'
 
-    - name: Convert HTML to PDF
-      command: "/usr/local/bin/wkhtmltopdf {{ html_file }} {{ pdf_file }}"
-      #delegate_to: localhost
+    - name: Convert HTML to PDF using Python script
+      ansible.builtin.command:
+        cmd: convert_html_to_pdf.py
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"  # Ensure wkhtmltopdf is in PATH
+      become: yes
+      #delegate_to: localhost - convert_html_to_pdf.py
 
     - name: Convert JSON to XLSX
       command: "python3 {{ script_path }} {{ output_dir }}/netbox_data.json {{ xlsx_file }}"
