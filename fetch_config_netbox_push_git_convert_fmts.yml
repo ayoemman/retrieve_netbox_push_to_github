@@ -104,8 +104,7 @@
         mode: '0644'
 
     - name: Convert HTML to PDF  using Python script
-      command:
-        cmd: "python3 {{ htmltopdf_script_path }} {{ html_file }} {{ pdf_file }}"
+      command: "python3 {{ htmltopdf_script_path }} {{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.html {{ pdf_file }}"
 
     - name: Convert JSON to XLSX
       command: "python3 {{ script_path }} {{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.json {{ xlsx_file }}"
