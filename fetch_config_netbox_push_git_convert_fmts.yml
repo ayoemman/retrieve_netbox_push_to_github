@@ -1,9 +1,11 @@
 ---
 - name: Fetch configurations from NetBox and push to GitHub
   hosts: localhost
-  gather_facts: no
+  gather_facts: yes
   vars:
     target_host: "node3"
+    current_date: "{{ ansible_date_time.date | replace('-', '') }}" # Format as YYYYMMDD
+    current_time: "{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"  # Format as HHMM
     netbox_api_url: "https://mnqh6527.cloud.netboxapp.com/api/"
     netbox_token: "7e1c591e544353bedaeba2fdca5309ff16dfe268"
     github_token: "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"
@@ -70,7 +72,7 @@
             "sites": {{ netbox_sites.content | to_nice_json }},
             "racks": {{ netbox_racks.content | to_nice_json }}
           }
-        dest: "{{ output_dir }}/netbox_data.json"
+        dest: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.json"
         mode: '0644'
       delegate_to: "{{ target_host }}"
       register: json_save_result
