@@ -8,6 +8,7 @@
     html_file: "{{ output_dir }}/netbox_data.html"
     pdf_file: "{{ output_dir }}/netbox_data.pdf"
     xlsx_file: "{{ output_dir }}/netbox_data.xlsx"
+    script_path: "convert_json_to_xlsx.py"
 
   tasks:
     - name: Ensure output directory exists
@@ -92,16 +93,14 @@
       #delegate_to: localhost
 
     - name: Convert JSON to XLSX
-      community.general.json_to_xlsx:
-        src: "{{ output_dir }}/netbox_data.json"
-        dest: "{{ xlsx_file }}"
+      command: "python3 {{ script_path }} {{ output_dir }}/netbox_data.json {{ xlsx_file }}"
       #delegate_to: localhost
 
     - name: Configure Git user
       command:
         cmd: git config --global user.name "{{ git_username }}"
         chdir: "{{ git_repo_path }}"
-      
+    
     - name: Configure Git email
       command:
         cmd: git config --global user.email "{{ git_useremail }}"
