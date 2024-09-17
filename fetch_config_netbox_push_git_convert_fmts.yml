@@ -18,6 +18,7 @@
     pdf_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.pdf"
     xlsx_file: "{{ output_dir }}/netbox_data-{{ current_date }}-{{ current_time }}.xlsx"
     script_path: "convert_json_to_xlsx.py"
+    htmltopdf_script_path: "convert_html_to_pdf.py"
 
   tasks:
     - name: Ensure output directory exists
@@ -104,12 +105,8 @@
         mode: '0644'
 
     - name: Convert HTML to PDF using Python script
-      ansible.builtin.command:
-        cmd: convert_html_to_pdf.py
-      environment:
-        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"  # Ensure wkhtmltopdf is in PATH
-      become: yes
-      #delegate_to: localhost - convert_html_to_pdf.py
+      command: "python3 {{ htmltopdf_script_path }} {{ html_file }} {{ pdf_file }}"
+      #delegate_to: localhost
 
     - name: Convert JSON to XLSX
       command: "python3 {{ script_path }} {{ output_dir }}/netbox_data.json {{ xlsx_file }}"
