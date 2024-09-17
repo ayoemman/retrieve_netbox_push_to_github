@@ -92,13 +92,9 @@
       #delegate_to: localhost
 
     - name: Convert JSON to XLSX
-      community.general.xlwt:
-        path: "{{ xlsx_file }}"
-        sheet_name: "NetBox Data"
-        data:
-          - [ "Devices", "{{ netbox_devices.content | to_nice_json }}" ]
-          - [ "Sites", "{{ netbox_sites.content | to_nice_json }}" ]
-          - [ "Racks", "{{ netbox_racks.content | to_nice_json }}" ]
+      community.general.json_to_xlsx:
+        src: "{{ output_dir }}/netbox_data.json"
+        dest: "{{ xlsx_file }}"
       #delegate_to: localhost
 
     - name: Configure Git user
