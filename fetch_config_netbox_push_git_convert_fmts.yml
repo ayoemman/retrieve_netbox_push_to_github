@@ -89,7 +89,7 @@
         mode: '0644'
 
     - name: Convert HTML to PDF
-      command: "wkhtmltopdf {{ html_file }} {{ pdf_file }}"
+      command: "/usr/local/bin/wkhtmltopdf {{ html_file }} {{ pdf_file }}"
       #delegate_to: localhost
 
     - name: Convert JSON to XLSX
