@@ -1,0 +1,30 @@
+---
+- name: Add Interface to NetBox
+  hosts: localhost
+  gather_facts: no
+  vars:
+    netbox_url: "{{ netbox_url }}"
+    netbox_token: "{{ netbox_token }}"
+    device_name: "MR-AP01"
+    interface_name: "eth0"
+    interface_type: "1000base-t"
+    description: "Access Point Number 1"
+    tags:
+      - "production"
+      - "network"
+  tasks:
+    - name: Add interface to NetBox
+      netbox.netbox.netbox_device_interface:
+        netbox_url: "{{ netbox_url }}"
+        netbox_token: "{{ netbox_token }}"
+        data:
+          device: "{{ device_name }}"
+          name: "{{ interface_name }}"
+          type: "{{ interface_type }}"
+          description: "{{ description }}"
+          tags: "{{ tags }}"
+      register: result
+
+    - name: Show result
+      debug:
+        msg: "Interface added successfully: {{ result }}"
