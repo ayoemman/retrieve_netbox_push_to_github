@@ -9,9 +9,7 @@
     interface_name: "ge-0/0/48"
     interface_type: "1000BASE-T (1GE)"
     description: "Access Point Number 1"
-    tags:
-      - "production"
-      - "network"
+    
   tasks:
     - name: Add interface to NetBox
       netbox.netbox.netbox_device_interface:
