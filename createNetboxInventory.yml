@@ -5,9 +5,9 @@
   vars:
     netbox_url: "{{ netbox_url }}"
     netbox_token: "{{ netbox_token }}"
-    device_name: "MR-AP01"
-    interface_name: "eth0"
-    interface_type: "1000base-t"
+    device_name: "NLAMS01-SW-1"
+    interface_name: "ge-0/0/48"
+    interface_type: "1000BASE-T (1GE)"
     description: "Access Point Number 1"
     tags:
       - "production"
