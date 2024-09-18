@@ -9,8 +9,6 @@
     interface_name: "ge-0/0/48"
     interface_type: "1000BASE-T (1GE)"
     description: "Access Point Number 1"
-    interface_tags:
-      - "null"
     
   tasks:
     - name: Add interface to NetBox
@@ -22,7 +20,6 @@
           name: "{{ interface_name }}"
           type: "{{ interface_type }}"
           description: "{{ description }}"
-          tags: "{{ tags }}"
       register: result
 
     - name: Show result
