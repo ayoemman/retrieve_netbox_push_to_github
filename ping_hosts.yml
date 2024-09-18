@@ -1,8 +1,7 @@
-# ping_hosts.yml
-
 ---
-- name: Ping all hosts
-  hosts: all
+- name: Ping the local host
+  hosts: localhost
+  connection: local
   tasks:
-    - name: Ping the hosts
+    - name: Ping the local host
       ansible.builtin.ping:
